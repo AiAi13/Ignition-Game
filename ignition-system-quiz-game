@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ignition System Quiz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Ignition System Quiz</h1>
+    <div id="question-container">
+      <!-- Question will be dynamically inserted here -->
+    </div>
+    <div class="answers-container">
+      <!-- Multiple choice answers will be inserted here -->
+    </div>
+    <div id="timer">
+      Time Remaining: <span id="time-left">30</span> seconds
+    </div>
+    <button id="next-button" disabled>Next Question</button>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.quiz-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+button:disabled {
+  background-color: #ccc;
+}
+
+.answers-container {
+  margin-top: 20px;
+}
+
+.answers-container button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.answers-container button:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
+#timer {
+  margin-top: 15px;
+  font-size: 1.2rem;
+}
+const questions = [
+  {
+    question: "What is the ignition system?",
+    answers: [
+      "A system to generate spark for the engine.",
+      "A system to generate fuel for the engine.",
+      "A system to control exhaust gases."
+    ],
+    correctAnswer: "A system to generate spark for the engine."
+  },
+  {
+    question: "Which of the following is a type of ignition system?",
+    answers: [
+      "Glow plug ignition system",
+      "Battery ignition system",
+      "Magneto ignition system",
+      "All of the above"
+    ],
+    correctAnswer: "All of the above"
+  },
+  {
+    question: "What is the purpose of the battery in a battery ignition system?",
+    answers: [
+      "To store electrical energy.",
+      "To provide spark to the engine.",
+      "To regulate engine temperature."
+    ],
+    correctAnswer: "To store electrical energy."
+  },
+  {
+    question: "What causes ignition failure?",
+    answers: [
+      "Faulty spark plug",
+      "Bad ignition coil",
+      "Both of the above"
+    ],
+    correctAnswer: "Both of the above"
+  }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 30;
+let timer;
+
+function startGame() {
+  loadQuestion();
+  startTimer();
+}
+
+function loadQuestion() {
+  const currentQuestion = questions[currentQuestionIndex];
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.innerHTML = `<h2>${currentQuestion.question}</h2>`;
+
+  const answersContainer = document.querySelector(".answers-container");
+  answersContainer.innerHTML = "";
+  currentQuestion.answers.forEach(answer => {
+    const answerButton = document.createElement("button");
+    answerButton.textContent = answer;
+    answerButton.onclick = () => checkAnswer(answer, currentQuestion.correctAnswer);
+    answersContainer.appendChild(answerButton);
+  });
+
+  document.getElementById("next-button").disabled = true;
+}
+
+function checkAnswer(selectedAnswer, correctAnswer) {
+  if (selectedAnswer === correctAnswer) {
+    score++;
+  }
+  document.getElementById("next-button").disabled = false;
+  clearInterval(timer);
+}
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("time-left").textContent = timeLeft;
+    if (timeLeft === 0) {
+      clearInterval(timer);
+      document.getElementById("next-button").disabled = false;
+    }
+  }, 1000);
+}
+
+function nextQuestion() {
+  if (currentQuestionIndex < questions.length - 1) {
+    currentQuestionIndex++;
+    timeLeft = 30;
+    loadQuestion();
+    startTimer();
+  } else {
+    alert(`Game over! Your score is: ${score}`);
+    currentQuestionIndex = 0;
+    score = 0;
+    timeLeft = 30;
+    loadQuestion();
+    startTimer();
+  }
+}
+
+document.getElementById("next-button").addEventListener("click", nextQuestion);
+
+startGame();
