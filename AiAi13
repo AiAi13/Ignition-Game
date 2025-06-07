@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ignition System Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Ignition System Quiz</h1>
+    <div id="question-container"></div>
+    <div class="answers-container"></div>
+    <div id="timer">
+      Time Remaining: <span id="time-left">30</span> seconds
+    </div>
+    <div id="score"></div>
+    <button id="next-button" disabled>Next Question</button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+const questions = [
+  {
+    question: "What is an ignition system?",
+    answers: [
+      "A system to generate spark for the engine.",
+      "A system to generate fuel for the engine.",
+      "A system to control exhaust gases."
+    ],
+    correctAnswer: "A system to generate spark for the engine."
+  },
+  // more questions follow...
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+function startGame() {
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const currentQuestion = questions[currentQuestionIndex];
+  document.getElementById("question-container").innerHTML = `<h2>${currentQuestion.question}</h2>`;
+  
+  const answersContainer = document.querySelector(".answers-container");
+  answersContainer.innerHTML = "";
+  currentQuestion.answers.forEach(answer => {
+    const answerButton = document.createElement("button");
+    answerButton.textContent = answer;
+    answerButton.onclick = () => checkAnswer(answer, currentQuestion.correctAnswer);
+    answersContainer.appendChild(answerButton);
+  });
+}
